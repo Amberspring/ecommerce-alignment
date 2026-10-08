@@ -1,0 +1,21 @@
+{
+  "base": {
+    "finish_reasons": {
+      "length": 6,
+      "stop": 42
+    },
+    "mean_completion_tokens": 134.75
+  },
+  "sft": {
+    "finish_reasons": {
+      "stop": 48
+    },
+    "mean_completion_tokens": 13.75
+  },
+  "dpo": {
+    "finish_reasons": {
+      "stop": 48
+    },
+    "mean_completion_tokens": 13.583333333333334
+  }
+}
