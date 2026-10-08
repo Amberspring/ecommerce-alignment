@@ -1,0 +1,12 @@
+{
+  "status": "measured_data_build_only",
+  "policies": 32,
+  "rows": 256,
+  "counts": {
+    "train": 160,
+    "validation": 48,
+    "test": 48,
+    "rejected": 0
+  },
+  "limitation": "Synthetic templates with group-isolated policies; not production data or business accuracy."
+}

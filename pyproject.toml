@@ -1,0 +1,20 @@
+    [build-system]
+    requires = ["setuptools>=69"]
+    build-backend = "setuptools.build_meta"
+    [project]
+    name = "ecommerce-alignment"
+    version = "0.1.0"
+    description = "Reproducible learning project with explicit experiment provenance"
+    requires-python = ">=3.11"
+    dependencies = []
+    [project.optional-dependencies]
+gpu = ["torch==2.7.1", "transformers==4.52.4", "trl==0.19.1", "peft==0.15.2", "datasets==3.6.0", "accelerate==1.7.0", "bitsandbytes==0.46.0"]
+smoke = ["torch==2.7.1"]
+trl-smoke = ["torch==2.7.1", "transformers==4.52.4", "trl==0.19.1", "peft==0.15.2", "datasets==3.6.0", "accelerate==1.7.0"]
+eval = ["httpx==0.28.1"]
+serve = ["fastapi==0.115.12", "uvicorn==0.34.2"]
+    [tool.setuptools.packages.find]
+    where = ["src"]
+    [tool.pytest.ini_options]
+    pythonpath = ["src"]
+    testpaths = ["tests"]

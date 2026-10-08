@@ -1,0 +1,17 @@
+{
+  "status": "measured",
+  "scope": "tiny_cpu_autograd_smoke_only",
+  "model": "TinyPolicy (16-dimensional conditional character distribution)",
+  "seed": 42,
+  "torch": "2.7.1+cpu",
+  "device": "cpu",
+  "examples": 12,
+  "data_sha256": "32ab831b758ef938b130c975ee01bac26788732f7d3b30733bce6079dc0b67eb",
+  "sft_initial_loss": 5.029090404510498,
+  "sft_final_loss": 3.8746421337127686,
+  "dpo_initial_loss": 0.6931471824645996,
+  "dpo_final_loss": 0.0002385918633081019,
+  "dpo_parameter_delta_l2": 10.785100936889648,
+  "min_sft_grad_norm": 0.04050339758396149,
+  "qwen_experiment": "not_run"
+}

@@ -1,0 +1,6 @@
+{"id": "e0", "prompt": "请说明退货流程", "must_include": ["未拆封商品签收后七天内可申请退货"], "must_not_include": ["保证立即成功"], "category": "退货"}
+{"id": "e1", "prompt": "请说明物流流程", "must_include": ["请在订单页查看物流轨迹"], "must_not_include": ["保证立即成功"], "category": "物流"}
+{"id": "e2", "prompt": "请说明发票流程", "must_include": ["请在订单页提交开票信息"], "must_not_include": ["保证立即成功"], "category": "发票"}
+{"id": "e3", "prompt": "请说明优惠券流程", "must_include": ["优惠券能否叠加以活动页面规则为准"], "must_not_include": ["保证立即成功"], "category": "优惠券"}
+{"id": "e4", "prompt": "请说明退款流程", "must_include": ["退款进度请在售后页面查看"], "must_not_include": ["保证立即成功"], "category": "退款"}
+{"id": "e5", "prompt": "请说明破损流程", "must_include": ["请保留商品和包装照片"], "must_not_include": ["保证立即成功"], "category": "破损"}

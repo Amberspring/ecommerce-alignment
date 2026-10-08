@@ -1,0 +1,13 @@
+{
+  "status": "measured",
+  "input_sha256": "c6ad3691dd557cc9c4b007f3370ef385028a9ba94003dbd82c5010a9d0cf16ad",
+  "counts": {
+    "train": 8,
+    "validation": 2,
+    "test": 2,
+    "rejected": 2
+  },
+  "preference_train": 8,
+  "seed": 42,
+  "limitations": "Synthetic fixtures; no production-data claim. Regex redaction is not exhaustive PII detection."
+}

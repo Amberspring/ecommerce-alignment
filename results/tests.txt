@@ -1,0 +1,2 @@
+Latest actual pytest result summarized from results/tests.xml
+tests=6 failures=0 errors=0 seconds=21.685

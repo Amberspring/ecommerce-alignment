@@ -1,0 +1,19 @@
+{
+  "model": "Qwen/Qwen3-8B",
+  "rank": 16,
+  "qlora": false,
+  "target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "learning_rate": 0.0002,
+  "epochs": 2,
+  "max_length": 1024,
+  "beta": 0.1,
+  "output": "artifacts/lora-r16-all"
+}
