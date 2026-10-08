@@ -3,15 +3,23 @@ from pathlib import Path
 
 
 def score(rows, predictions):
+    if not rows or len({r["id"] for r in rows}) != len(rows):
+        raise ValueError("Evaluation must have nonempty, unique IDs")
     by = {p["id"]: p["answer"] for p in predictions}
+    truncated = {p["id"] for p in predictions if p.get("finish_reason") == "length"}
     if len(by) != len(predictions) or set(by) != {r["id"] for r in rows}:
         raise ValueError("Prediction IDs must match evaluation IDs exactly")
     cases = []
     for r in rows:
         answer = by[r["id"]]
-        ok = all(x in answer for x in r["must_include"]) and not any(
-            x in answer for x in r.get("must_not_include", [])
-        )
+        if not isinstance(answer, str):
+            raise ValueError("Prediction answers must be strings")
+        def contains(term):
+            return bool(re.search(r"(?<!\d)" + re.escape(term) + r"(?!\d)", answer)) if term.isdigit() else term in answer
+
+        ok = all(contains(x) for x in r["must_include"]) and not any(
+            contains(x) for x in r.get("must_not_include", [])
+        ) and r["id"] not in truncated
         reasons = []
         if not ok:
             reasons.append("policy_or_fact")

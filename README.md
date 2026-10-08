@@ -1,3 +1,7 @@
+## 全链路补充（2026-10-08）
+
+新增同集 Base/SFT/DPO endpoint 对照、原始响应与哈希追踪；修正数值关键词边界和截断预测评分。当前电商数据为合成教学样例，真实业务质量仍未验证，见 [评测链路](docs/EVALUATION_CHAIN.md)。
+
 ## 原帖路线更新（2026-10-05）
 
 本仓库是当前原帖路线版本；最新配置、执行命令和验收条件见 [docs/ORIGINAL_ROUTE.md](docs/ORIGINAL_ROUTE.md)。2026-10-06 已在 RTX 4080 SUPER 32GB 上完成 Qwen3-8B QLoRA SFT 与 DPO 主配置实测，原始日志、配置、适配器和 `run.json` 均随仓库保留。
