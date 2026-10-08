@@ -1,0 +1,399 @@
+{
+  "status": "measured",
+  "dataset_sha256": "4db05dd39ba5596fa1a4c140e8b577ee876b5eee978cedcbf01d56e91908d869",
+  "generation": {
+    "temperature": 0,
+    "max_tokens": 256,
+    "enable_thinking": false
+  },
+  "models": {
+    "base": {
+      "count": 20,
+      "mean_reference_token_f1": 0.2148260818342842,
+      "reference_exact_match_rate": 0.0,
+      "cases": [
+        {
+          "id": "0",
+          "token_f1": 0.25316455696202533,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "1",
+          "token_f1": 0.2978723404255319,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "2",
+          "token_f1": 0.175,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "3",
+          "token_f1": 0.2318840579710145,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "4",
+          "token_f1": 0.20408163265306123,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "5",
+          "token_f1": 0.21052631578947367,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "6",
+          "token_f1": 0.18181818181818182,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "7",
+          "token_f1": 0.13793103448275862,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "8",
+          "token_f1": 0.16,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "9",
+          "token_f1": 0.25,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "10",
+          "token_f1": 0.2222222222222222,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "11",
+          "token_f1": 0.17857142857142858,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "12",
+          "token_f1": 0.1896551724137931,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "13",
+          "token_f1": 0.2222222222222222,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "14",
+          "token_f1": 0.20588235294117646,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "15",
+          "token_f1": 0.23008849557522124,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "16",
+          "token_f1": 0.24242424242424243,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "17",
+          "token_f1": 0.2206896551724138,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "18",
+          "token_f1": 0.18461538461538463,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "19",
+          "token_f1": 0.2978723404255319,
+          "exact_match": false,
+          "truncated": false
+        }
+      ],
+      "model": "Qwen3-8B",
+      "predictions_sha256": "4ccdbed80eae91a2025435beb254449ad47504c1841a6c270d02ccb28a8b1e35"
+    },
+    "sft": {
+      "count": 20,
+      "mean_reference_token_f1": 0.2206051502305358,
+      "reference_exact_match_rate": 0.0,
+      "cases": [
+        {
+          "id": "0",
+          "token_f1": 0.336283185840708,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "1",
+          "token_f1": 0.34782608695652173,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "2",
+          "token_f1": 0.15584415584415584,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "3",
+          "token_f1": 0.208955223880597,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "4",
+          "token_f1": 0.15384615384615385,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "5",
+          "token_f1": 0.19047619047619047,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "6",
+          "token_f1": 0.21052631578947367,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "7",
+          "token_f1": 0.14285714285714285,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "8",
+          "token_f1": 0.17142857142857143,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "9",
+          "token_f1": 0.32142857142857145,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "10",
+          "token_f1": 0.18181818181818182,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "11",
+          "token_f1": 0.20833333333333334,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "12",
+          "token_f1": 0.2647058823529412,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "13",
+          "token_f1": 0.2,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "14",
+          "token_f1": 0.12244897959183673,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "15",
+          "token_f1": 0.1927710843373494,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "16",
+          "token_f1": 0.2222222222222222,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "17",
+          "token_f1": 0.25806451612903225,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "18",
+          "token_f1": 0.15384615384615385,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "19",
+          "token_f1": 0.3684210526315789,
+          "exact_match": false,
+          "truncated": false
+        }
+      ],
+      "model": "ecommerce-sft",
+      "predictions_sha256": "715a95ed3cbd0a3307977f93080b6d5d6cbb423708ec993cba144e7b3743f6cf"
+    },
+    "dpo": {
+      "count": 20,
+      "mean_reference_token_f1": 0.218768209387859,
+      "reference_exact_match_rate": 0.0,
+      "cases": [
+        {
+          "id": "0",
+          "token_f1": 0.336283185840708,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "1",
+          "token_f1": 0.34782608695652173,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "2",
+          "token_f1": 0.15584415584415584,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "3",
+          "token_f1": 0.208955223880597,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "4",
+          "token_f1": 0.15384615384615385,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "5",
+          "token_f1": 0.19047619047619047,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "6",
+          "token_f1": 0.21052631578947367,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "7",
+          "token_f1": 0.14285714285714285,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "8",
+          "token_f1": 0.21428571428571427,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "9",
+          "token_f1": 0.32142857142857145,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "10",
+          "token_f1": 0.18181818181818182,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "11",
+          "token_f1": 0.1702127659574468,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "12",
+          "token_f1": 0.25806451612903225,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "13",
+          "token_f1": 0.2,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "14",
+          "token_f1": 0.12244897959183673,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "15",
+          "token_f1": 0.1927710843373494,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "16",
+          "token_f1": 0.2222222222222222,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "17",
+          "token_f1": 0.27586206896551724,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "18",
+          "token_f1": 0.15384615384615385,
+          "exact_match": false,
+          "truncated": false
+        },
+        {
+          "id": "19",
+          "token_f1": 0.3157894736842105,
+          "exact_match": false,
+          "truncated": false
+        }
+      ],
+      "model": "ecommerce-dpo",
+      "predictions_sha256": "4a97b13eaa580e8819acb2765415ae4e851d02ad6232a5e147bd56b740f8308c"
+    }
+  },
+  "warning": "Reference lexical overlap on public human product QA; not factual accuracy, preference or Chinese policy performance."
+}

@@ -1,0 +1,32 @@
+{
+  "source": "https://amazon-qa.s3-us-west-2.amazonaws.com/val-qar.jsonl",
+  "source_documentation": "https://github.com/amazonqa/amazonqa",
+  "split": "validation",
+  "content_range": "bytes 0-1048575/747051157",
+  "source_prefix_sha256": "02ea507e130898c7363013020f15b430aae62598c76a44679a317ddd59acb64b",
+  "dataset_sha256": "4db05dd39ba5596fa1a4c140e8b577ee876b5eee978cedcbf01d56e91908d869",
+  "ids": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19"
+  ],
+  "selection": "First 20 unique qids with nonempty original answers and reviews in fixed first 1MiB; first three snippets, each limited to 400 characters",
+  "limitations": "Human community answers, not expert factual gold. Prefix subset not representative; public validation data may be in pretraining. Review selection and answerability classifier are not human factual labels. English product QA is different from Chinese policy training. Reference overlap is not factual accuracy or preference win rate. No unrestricted dataset redistribution license asserted; raw data kept in ignored local artifacts."
+}
