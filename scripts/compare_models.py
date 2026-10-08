@@ -8,7 +8,7 @@ from pathlib import Path
 
 import httpx
 from ecom.data import read, write
-from ecom.evaluate import score
+from ecom.evaluate import score, score_references
 
 
 def run(dataset, endpoints, output):
@@ -39,9 +39,10 @@ def run(dataset, endpoints, output):
                                     "finish_reason": choice.get("finish_reason"), "usage": data.get("usage"),
                                     "model": data.get("model"), "latency_ms": (time.perf_counter() - start) * 1000})
                 write(output / f"{label}.jsonl", predictions)
-        report["models"][label] = {**score(rows, predictions), "model": endpoint["model"],
+        scorer = score_references if "references" in rows[0] else score
+        report["models"][label] = {**scorer(rows, predictions), "model": endpoint["model"],
                                     "predictions_sha256": hashlib.sha256((output / f"{label}.jsonl").read_bytes()).hexdigest()}
-    report.update(status="measured", warning="Keyword rubric on synthetic policies; not human preference, hallucination rate or production accuracy.")
+    report.update(status="measured", warning="Reference lexical overlap on public human product QA; not factual accuracy, preference or Chinese policy performance." if "references" in rows[0] else "Keyword rubric on synthetic policies; not human preference, hallucination rate or production accuracy.")
     (output / "comparison.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     return report
 

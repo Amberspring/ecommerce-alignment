@@ -1,5 +1,32 @@
 import argparse, json, hashlib, re
+from collections import Counter
 from pathlib import Path
+
+
+def score_references(rows, predictions):
+    """Lexical reference overlap, deliberately not a factual accuracy metric."""
+    if not rows or len({r["id"] for r in rows}) != len(rows):
+        raise ValueError("Evaluation must have nonempty unique IDs")
+    by = {p["id"]: p for p in predictions}
+    if len(by) != len(predictions) or set(by) != {r["id"] for r in rows}:
+        raise ValueError("Prediction IDs must match exactly")
+    def tokens(text):
+        return re.findall(r"[a-z0-9]+", re.sub(r"\b(a|an|the)\b", " ", text.lower()))
+    cases = []
+    for row in rows:
+        prediction = by[row["id"]]
+        answer = tokens(prediction["answer"])
+        references = [tokens(r) for r in row["references"]]
+        if not references:
+            raise ValueError("References required")
+        def f1(reference):
+            overlap = sum((Counter(answer) & Counter(reference)).values())
+            return 2 * overlap / (len(answer) + len(reference)) if answer or reference else 1.0
+        truncated = prediction.get("finish_reason") == "length"
+        cases.append({"id": row["id"], "token_f1": 0.0 if truncated else max(map(f1, references)),
+                      "exact_match": not truncated and answer in references, "truncated": truncated})
+    return {"count": len(cases), "mean_reference_token_f1": sum(c["token_f1"] for c in cases) / len(cases),
+            "reference_exact_match_rate": sum(c["exact_match"] for c in cases) / len(cases), "cases": cases}
 
 
 def score(rows, predictions):
