@@ -1,3 +1,7 @@
+## 全链路补充（2026-10-08）
+
+新增同集 Base/SFT/DPO endpoint 对照、原始响应与哈希追踪；修正数值关键词边界和截断预测评分。当前电商数据为合成教学样例，真实业务质量仍未验证，见 [评测链路](docs/EVALUATION_CHAIN.md)。
+
 ## 原帖路线更新（2026-10-05）
 
 本仓库是当前原帖路线版本；最新配置、执行命令和验收条件见 [docs/ORIGINAL_ROUTE.md](docs/ORIGINAL_ROUTE.md)。2026-10-06 已在 RTX 4080 SUPER 32GB 上完成 Qwen3-8B QLoRA SFT 与 DPO 主配置实测，原始日志、配置、适配器和 `run.json` 均随仓库保留。
@@ -87,3 +91,11 @@ python -m ecom.evaluate --predictions artifacts/predictions.jsonl --output resul
 上传方式见 [docs/GITHUB.md](docs/GITHUB.md)，接口依据见 [docs/SOURCES.md](docs/SOURCES.md)。
 
 当前原帖实验数据入口：`python scripts/build_synthetic.py`，按店铺划分 160/48/48。不要在此后运行默认 `ecom.data` 覆盖新训练集。数据为自行编写的模板化合成样例。
+
+## 2026-10-08 真实模型验收
+
+复用 2026-10-06 的 Qwen3-8B SFT/DPO 适配器，统一 FP16、temperature=0、非 thinking 和生成预算，48 条合成政策留出题的规则通过率为 Base 31/48、SFT 48/48、DPO 48/48。原始生成、结束原因与汇总位于 `results/policy-20261008/`；这不是实际客户满意度，也未证明 DPO 额外收益。
+
+另用 AmazonQA 官方验证文件固定前 1 MiB 中前 20 个不同问题，向模型提供评论证据而不提供人类答案；Base/SFT/DPO 的英文 token F1 分别为 0.214826、0.220605、0.218768，exact match 均为 0。来源、范围、数据哈希与指标见 `results/amazonqa-20261008/`，复现使用 `scripts/prepare_amazonqa.py`。该小型顺序子集非代表性抽样，F1 仅衡量词面重合，公开数据也可能出现在预训练中；原始社区问答保留在本地审计目录，未随仓库再分发。
+
+相同 256-token 预算下，Base 有 6 条截断，SFT/DPO 均无截断，截断计为不通过；平均输出长度分别为 134.75、13.75、13.58 token。政策规则成绩同时反映简洁输出与规则匹配，不能全部归因于事实能力差异，统计见 `results/policy-20261008/generation-audit.json`。
