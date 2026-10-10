@@ -24,10 +24,27 @@ def test_endpoint_comparison_records_real_response(monkeypatch, tmp_path):
     def handle(request):
         body = json.loads(request.content)
         assert body["temperature"] == 0 and body["chat_template_kwargs"]["enable_thinking"] is False
-        return httpx.Response(200, json={"model": body["model"], "choices": [{"message": {"content": "7天"}, "finish_reason": "stop"}], "usage": {"total_tokens": 10}})
+        return httpx.Response(200, json={"model": body["model"], "choices": [{"message": {"content": "7天"}, "finish_reason": "stop"}], "usage": {"total_tokens": 10, "completion_tokens": 2}})
     monkeypatch.setattr(module.httpx, "Client", lambda **kwargs: real_client(transport=httpx.MockTransport(handle), **kwargs))
     dataset = tmp_path / "eval.jsonl"
     dataset.write_text(json.dumps({"id": "a", "prompt": "question", "must_include": ["7"]}), encoding="utf-8")
     result = module.run(dataset, {label: {"url": "http://fixture/v1", "model": label} for label in ("base", "sft", "dpo")}, tmp_path / "results")
     assert all(r["rubric_pass_rate"] == 1 for r in result["models"].values())
+    assert all(r["mean_completion_tokens"] == 2 for r in result["models"].values())
     assert (tmp_path / "results/comparison.json").exists()
+
+
+def test_reference_comparison_reports_paired_uncertainty(monkeypatch, tmp_path):
+    spec = importlib.util.spec_from_file_location("comparison", Path(__file__).resolve().parents[1] / "scripts/compare_models.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    real_client = httpx.Client
+    def handle(request):
+        body = json.loads(request.content)
+        answer = {"base": "wrong", "sft": "right answer", "dpo": "right answer"}[body["model"]]
+        return httpx.Response(200, json={"model": body["model"], "choices": [{"message": {"content": answer}, "finish_reason": "stop"}], "usage": {"completion_tokens": 2}})
+    monkeypatch.setattr(module.httpx, "Client", lambda **kwargs: real_client(transport=httpx.MockTransport(handle), **kwargs))
+    dataset = tmp_path / "external.jsonl"
+    dataset.write_text(json.dumps({"id": "a", "prompt": "q", "references": ["right answer"]}), encoding="utf-8")
+    result = module.run(dataset, {label: {"url": "http://fixture/v1", "model": label} for label in ("base", "sft", "dpo")}, tmp_path / "external-results")
+    assert result["paired_token_f1_deltas"]["sft_minus_base"]["mean_token_f1_delta"] > 0
