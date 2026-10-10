@@ -32,7 +32,7 @@ def main():
         if len(rows) == 20:
             break
     data = target / "eval.jsonl"
-    data.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8")
+    data.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8", newline="\r\n")
     if len(rows) != 20 or hashlib.sha256(data.read_bytes()).hexdigest() != "4db05dd39ba5596fa1a4c140e8b577ee876b5eee978cedcbf01d56e91908d869":
         raise ValueError("Historical audit bytes no longer match the recorded run")
     print(data)

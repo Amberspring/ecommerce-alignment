@@ -2,7 +2,7 @@
   "status": "measured",
   "date": "2026-10-10",
   "tests": {
-    "passed": 11,
+    "passed": 12,
     "skipped": 2,
     "warning": "Two optional training checks were skipped because this CPU environment does not include their optional model dependencies."
   },

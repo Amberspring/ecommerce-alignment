@@ -77,7 +77,7 @@ def build(output, sample_size=200, range_count=64, range_bytes=1048576, seed=202
         selected.sort(key=lambda row: (not row["id"].isdigit(), int(row["id"]) if row["id"].isdigit() else row["id"]))
         output.mkdir(parents=True)
         data = output / "eval.jsonl"
-        data.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in selected), encoding="utf-8")
+        data.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in selected), encoding="utf-8", newline="\r\n")
         manifest = {
             "source": URL, "source_documentation": "https://github.com/amazonqa/amazonqa",
             "source_etag": head.headers.get("etag"), "source_bytes": total,
@@ -90,7 +90,7 @@ def build(output, sample_size=200, range_count=64, range_bytes=1048576, seed=202
             "selection": f"{range_count} seeded {range_bytes}-byte ranges distributed across the complete validation file; boundary records discarded; {sample_size} eligible unique qids selected by seeded SHA-256 rank",
             "limitations": "Distributed byte-range sampling is not record-uniform. Community answers are not expert gold; public validation may occur in pretraining. English product QA differs from Chinese after-sales policy. Reference overlap is not factual accuracy or preference. Dataset license is not asserted; source bytes and eval rows remain gitignored.",
         }
-        (output / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+        (output / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
         return manifest
     finally:
         if own_client:

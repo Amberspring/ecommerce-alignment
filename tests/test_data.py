@@ -1,6 +1,7 @@
 from ecom.data import prepare, norm, validate_preferences
 from ecom.evaluate import score
 import pytest
+from pathlib import Path
 
 
 def test_redaction_and_prompt_split():
@@ -46,3 +47,11 @@ def test_rubric_and_badcase():
         [dict(id="a", answer="保证退款")],
     )
     assert r["rubric_pass_rate"] == 0 and r["badcases"]
+
+
+def test_jsonl_bytes_are_stable_across_platforms(tmp_path):
+    from ecom.data import write
+
+    target = tmp_path / "rows.jsonl"
+    write(target, [{"id": "a"}, {"id": "b"}])
+    assert target.read_bytes() == b'{"id": "a"}\r\n{"id": "b"}\r\n'

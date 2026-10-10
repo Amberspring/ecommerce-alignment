@@ -79,7 +79,7 @@ def run(dataset, endpoints, output):
     if "references" in rows[0]:
         report["paired_token_f1_deltas"] = _paired_deltas(report)
     report.update(status="measured", warning="Reference lexical overlap on public human product QA; not factual accuracy, preference or Chinese policy performance." if "references" in rows[0] else "Keyword rubric on synthetic policies; not human preference, hallucination rate or production accuracy.")
-    (output / "comparison.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    (output / "comparison.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     return report
 
 

@@ -35,7 +35,7 @@ def prepare(dataset, predictions, review, key, seed=20261010):
     fields += ["best", "notes"]
     key_rows = []
     with review.open("w", encoding="utf-8-sig", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             order = sorted(LABELS, key=lambda label: hashlib.sha256(f"{seed}:{row['id']}:{label}".encode()).digest())
@@ -47,7 +47,7 @@ def prepare(dataset, predictions, review, key, seed=20261010):
             writer.writerow(item)
             key_rows.append({"item_id": row["id"], "mapping": mapping})
     payload = {"seed": seed, "labels": list(LABELS), "template_sha256": hashlib.sha256(review.read_bytes()).hexdigest(), "items": key_rows}
-    key.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    key.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     return payload
 
 
@@ -98,7 +98,7 @@ def score(reviews, key, output):
     if output.exists():
         raise FileExistsError("Use a new output path to preserve experiment history")
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     return report
 
 
