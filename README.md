@@ -1,14 +1,17 @@
-## 全链路补充（2026-10-08）
-
-新增同集 Base/SFT/DPO endpoint 对照、原始响应与哈希追踪；修正数值关键词边界和截断预测评分。当前电商数据为合成教学样例，真实业务质量仍未验证，见 [评测链路](docs/EVALUATION_CHAIN.md)。
-
-## 原帖路线更新（2026-10-05）
-
-本仓库是当前原帖路线版本；最新配置、执行命令和验收条件见 [docs/ORIGINAL_ROUTE.md](docs/ORIGINAL_ROUTE.md)。2026-10-06 已在 RTX 4080 SUPER 32GB 上完成 Qwen3-8B QLoRA SFT 与 DPO 主配置实测，原始日志、配置、适配器和 `run.json` 均随仓库保留。
-
 # 电商客服大模型训练与偏好对齐
 
-实现客服数据清洗、隔离切分、Qwen3-8B 的 LoRA/QLoRA SFT 与 DPO 入口、评测及 badcase 流程。提供无需下载权重的 CPU 验证路径。
+Qwen3-8B 的 QLoRA SFT、DPO、同条件模型对照与证据审计项目。实现数据清洗和隔离切分、训练参数更新检查、逐例预测留痕、外部数据抽样、配对不确定性分析及真人盲评流程。
+
+[![CPU checks](https://github.com/Amberspring/ecommerce-alignment/actions/workflows/cpu-checks.yml/badge.svg)](https://github.com/Amberspring/ecommerce-alignment/actions/workflows/cpu-checks.yml)
+
+| 当前证据 | 结论 |
+|---|---|
+| 2026-10-06，RTX 4080 SUPER 32GB，SFT/DPO 各 40 step | 训练链路、policy 更新和 reference 冻结得到验证；不代表业务泛化。 |
+| 48 条合成政策题：Base 31/48，SFT 48/48，DPO 48/48 | 模板数据已饱和，且 Base 有 6 条截断；不能据此宣布 DPO 优于 SFT。 |
+| 历史 AmazonQA 20 题：F1 约 0.215/0.221/0.219，EM 均为 0 | 没有观察到可靠的 SFT/DPO 外部增益；样本太小。 |
+| 新冻结 AmazonQA 200 题 | 数据与 manifest 已在 CPU 上生成，模型预测和真人盲评尚未运行。 |
+
+当前本机和仓库不含 8B 适配器权重，远端原文件是否仍在尚未核实，不能仅凭日志复现相同模型。项目当前可证明后训练实验设计和负结果分析，尚不能声称真实客服质量提升；详见[独立评测与真人盲评](docs/HUMAN_EVAL.md)和[下一次模型验收预算](docs/NEXT_RUN_BUDGET.md)。
 
 **当前交付：CPU 工程验证 + Qwen3-8B GPU 主链路实测。** QLoRA SFT 与 DPO 各训练 2 epoch/40 step；SFT 和 DPO 分别记录 9.84GB、11.69GB 的 PyTorch peak allocated memory，均有 144 个可训练张量发生变化，DPO reference 保持不变。
 CPU 实验确实调用 TRL、PEFT 和 Qwen3 架构，但模型很小、随机初始化；不能把其 loss、token accuracy 或 reward accuracy 写成 8B 客服准确率。
@@ -96,6 +99,6 @@ python -m ecom.evaluate --predictions artifacts/predictions.jsonl --output resul
 
 复用 2026-10-06 的 Qwen3-8B SFT/DPO 适配器，统一 FP16、temperature=0、非 thinking 和生成预算，48 条合成政策留出题的规则通过率为 Base 31/48、SFT 48/48、DPO 48/48。原始生成、结束原因与汇总位于 `results/policy-20261008/`；这不是实际客户满意度，也未证明 DPO 额外收益。
 
-另用 AmazonQA 官方验证文件固定前 1 MiB 中前 20 个不同问题，向模型提供评论证据而不提供人类答案；Base/SFT/DPO 的英文 token F1 分别为 0.214826、0.220605、0.218768，exact match 均为 0。来源、范围、数据哈希与指标见 `results/amazonqa-20261008/`，复现使用 `scripts/prepare_amazonqa.py`。该小型顺序子集非代表性抽样，F1 仅衡量词面重合，公开数据也可能出现在预训练中；原始社区问答保留在本地审计目录，未随仓库再分发。
+另用 AmazonQA 官方验证文件固定前 1 MiB 中前 20 个不同问题，向模型提供评论证据而不提供人类答案；Base/SFT/DPO 的英文 token F1 分别为 0.214826、0.220605、0.218768，exact match 均为 0。来源、范围、数据哈希与指标见 `results/amazonqa-20261008/`，复现使用 `scripts/prepare_amazonqa_legacy20.py`。该小型顺序子集非代表性抽样，F1 仅衡量词面重合，公开数据也可能出现在预训练中；新的 200 题冻结集由 `scripts/prepare_amazonqa.py` 生成，尚无模型成绩。
 
 相同 256-token 预算下，Base 有 6 条截断，SFT/DPO 均无截断，截断计为不通过；平均输出长度分别为 134.75、13.75、13.58 token。政策规则成绩同时反映简洁输出与规则匹配，不能全部归因于事实能力差异，统计见 `results/policy-20261008/generation-audit.json`。
