@@ -2,6 +2,8 @@
 
 Qwen3-8B 的 QLoRA SFT、DPO、同条件模型对照与证据审计项目。实现数据清洗和隔离切分、训练参数更新检查、逐例预测留痕、外部数据抽样、配对不确定性分析及真人盲评流程。
 
+[![CPU checks](https://github.com/Amberspring/ecommerce-alignment/actions/workflows/cpu-checks.yml/badge.svg)](https://github.com/Amberspring/ecommerce-alignment/actions/workflows/cpu-checks.yml)
+
 | 当前证据 | 结论 |
 |---|---|
 | 2026-10-06，RTX 4080 SUPER 32GB，SFT/DPO 各 40 step | 训练链路、policy 更新和 reference 冻结得到验证；不代表业务泛化。 |
