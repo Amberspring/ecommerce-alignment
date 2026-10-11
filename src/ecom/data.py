@@ -16,6 +16,7 @@ def write(path, rows):
     p.write_text(
         "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows),
         encoding="utf-8",
+        newline="\r\n",
     )
 
 

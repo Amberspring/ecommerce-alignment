@@ -1,0 +1,31 @@
+{
+  "status": "measured",
+  "date": "2026-10-10",
+  "tests": {
+    "passed": 12,
+    "skipped": 2,
+    "warning": "Two optional training checks were skipped because this CPU environment does not include their optional model dependencies."
+  },
+  "amazonqa_frozen_sample": {
+    "source_bytes": 747051157,
+    "range_count": 64,
+    "range_bytes": 1048576,
+    "candidate_count": 8179,
+    "sample_size": 200,
+    "unique_qids": 200,
+    "unique_products": 197,
+    "category_count": 17,
+    "dataset_sha256": "f56e6495c47906d69b9802c8228b624d2aca4b793272133598ac207c97e0327a"
+  },
+  "completed": [
+    "distributed source sampling with range fingerprints",
+    "paired bootstrap comparison code",
+    "blind human-review preparation and strict aggregation",
+    "historical 20-question reconstruction"
+  ],
+  "not_completed": [
+    "Base/SFT/DPO inference on the frozen 200 questions",
+    "human review by real participants",
+    "adapter backup or remote existence verification"
+  ]
+}

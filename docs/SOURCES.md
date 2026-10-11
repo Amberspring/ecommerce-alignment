@@ -5,6 +5,7 @@
 - Qwen3-8B 模型与非思考模板：https://huggingface.co/Qwen/Qwen3-8B
 - TRL 0.19.1 SFT 参数：https://github.com/huggingface/trl/blob/v0.19.1/trl/trainer/sft_config.py
 - TRL 0.19.1 DPO 与双适配器参考：https://huggingface.co/docs/trl/v0.19.1/en/dpo_trainer
+- AmazonQA 官方仓库与 validation 下载说明：https://github.com/amazonqa/amazonqa 。仓库公开下载链接，但未在仓库根目录展示可确认的数据再分发许可；因此只提交来源 manifest，不提交原始问答或评论。
 - PEFT：https://huggingface.co/docs/peft/index
 - FAISS：https://github.com/facebookresearch/faiss
 - FlagEmbedding：https://github.com/FlagOpen/FlagEmbedding

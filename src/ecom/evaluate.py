@@ -29,6 +29,25 @@ def score_references(rows, predictions):
             "reference_exact_match_rate": sum(c["exact_match"] for c in cases) / len(cases), "cases": cases}
 
 
+def score_unanswerable(rows, predictions):
+    """A strict explicit-refusal proxy; factual unsupported-claim review remains separate."""
+    if not rows or any(r.get("label") != "unanswerable" for r in rows):
+        raise ValueError("Only an unanswerable subset can use refusal scoring")
+    by = {p["id"]: p for p in predictions}
+    if len(by) != len(predictions) or set(by) != {r["id"] for r in rows}:
+        raise ValueError("Prediction IDs must match exactly")
+    refusal = re.compile(r"\b(insufficient|not enough|cannot (?:determine|tell|confirm|answer)|can't (?:determine|tell|confirm|answer)|no (?:evidence|information|review)|reviews? (?:do not|don't|does not|doesn't) (?:say|mention|provide|show))\b", re.I)
+    cases = []
+    for row in rows:
+        prediction = by[row["id"]]
+        answer = prediction.get("answer") or ""
+        explicit = bool(refusal.search(answer)) and prediction.get("finish_reason") != "length"
+        cases.append({"id": row["id"], "explicit_insufficiency": explicit,
+                      "truncated": prediction.get("finish_reason") == "length", "error": bool(prediction.get("error"))})
+    return {"count": len(cases), "explicit_insufficiency_proxy_rate": sum(c["explicit_insufficiency"] for c in cases) / len(cases),
+            "cases": cases, "warning": "This string proxy is not correctness, evidence support, or unsupported-assertion accuracy; blind review is required."}
+
+
 def score(rows, predictions):
     if not rows or len({r["id"] for r in rows}) != len(rows):
         raise ValueError("Evaluation must have nonempty, unique IDs")
