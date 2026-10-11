@@ -1,6 +1,6 @@
 """Qwen training entrypoint. Requires real weights and CUDA; never substitutes a toy model."""
 
-import argparse, json
+import argparse, hashlib, json
 from pathlib import Path
 
 
@@ -8,8 +8,21 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--config", required=True)
     p.add_argument("--stage", choices=["sft", "dpo"], default="sft")
+    p.add_argument("--data-dir", required=True, help="Fresh AmazonQA alignment directory containing manifest.json")
+    p.add_argument("--output", required=True, help="Unique run directory; existing stage output is refused")
     a = p.parse_args()
     c = json.loads(Path(a.config).read_text(encoding="utf-8"))
+    data_dir = Path(a.data_dir)
+    manifest = json.loads((data_dir / "manifest.json").read_text(encoding="utf-8"))
+    if manifest.get("source_documentation") != "https://github.com/amazonqa/amazonqa":
+        raise ValueError("Training requires the AmazonQA alignment manifest")
+    required = ("train.jsonl", "validation.jsonl") if a.stage == "sft" else ("preferences.jsonl",)
+    for name in required:
+        if hashlib.sha256((data_dir / name).read_bytes()).hexdigest() != manifest["file_sha256"][name]:
+            raise ValueError(f"Training data hash mismatch: {name}")
+    output = Path(a.output) / a.stage
+    if output.exists():
+        raise FileExistsError(f"Historical run output exists: {output}")
     import torch
 
     if not torch.cuda.is_available():
@@ -48,7 +61,7 @@ def main():
         task_type="CAUSAL_LM",
     )
     shared = dict(
-        output_dir=c["output"] + "/" + a.stage,
+        output_dir=str(output),
         per_device_train_batch_size=1,
         gradient_accumulation_steps=8,
         learning_rate=c.get("dpo_learning_rate", 2e-5)
@@ -67,7 +80,7 @@ def main():
         ds = load_dataset(
             "json",
             data_files={
-                s: f"artifacts/data/{s}.jsonl" for s in ("train", "validation")
+                s: str(data_dir / f"{s}.jsonl") for s in ("train", "validation")
             },
         )
 
@@ -98,7 +111,7 @@ def main():
             ),
         )
     else:
-        adapter = Path(c.get("sft_adapter", str(Path(c["output"]) / "sft")))
+        adapter = Path(c.get("sft_adapter", str(Path(a.output) / "sft")))
         if not (adapter / "adapter_config.json").exists():
             raise FileNotFoundError("Run SFT before DPO")
         model = PeftModel.from_pretrained(
@@ -107,7 +120,7 @@ def main():
         model.load_adapter(str(adapter), adapter_name="reference", is_trainable=False)
         model.set_adapter("policy")
         ds = load_dataset(
-            "json", data_files="artifacts/data/preferences.jsonl", split="train"
+            "json", data_files=str(data_dir / "preferences.jsonl"), split="train"
         )
         ds = ds.map(
             lambda r: {
@@ -158,6 +171,8 @@ def main():
     meta = {
         "status": "measured",
         "config": c,
+        "data_manifest_sha256": hashlib.sha256((data_dir / "manifest.json").read_bytes()).hexdigest(),
+        "training_file_sha256": {name: manifest["file_sha256"][name] for name in required},
         "stage": a.stage,
         "changed_trainable_tensors": changed,
         "reference_unchanged": reference_unchanged if reference else None,

@@ -10,7 +10,7 @@ from pathlib import Path
 
 import httpx
 from ecom.data import read, write
-from ecom.evaluate import score, score_references
+from ecom.evaluate import score, score_references, score_unanswerable
 
 
 def _generation_summary(predictions):
@@ -18,6 +18,7 @@ def _generation_summary(predictions):
     completion_tokens = [row["usage"].get("completion_tokens") for row in predictions if isinstance(row.get("usage"), dict) and isinstance(row["usage"].get("completion_tokens"), int)]
     return {
         "truncated_count": sum(row.get("finish_reason") == "length" for row in predictions),
+        "error_count": sum(bool(row.get("error")) for row in predictions),
         "median_latency_ms": statistics.median(latencies),
         "mean_completion_tokens": sum(completion_tokens) / len(completion_tokens) if completion_tokens else None,
     }
@@ -47,8 +48,8 @@ def run(dataset, endpoints, output):
     rows = read(dataset)
     if not rows:
         raise ValueError("Empty evaluation dataset")
-    if not {"base", "sft", "dpo"}.issubset(endpoints):
-        raise ValueError("A comparable run requires base, sft, and dpo endpoints")
+    if not {"base", "sft"}.issubset(endpoints):
+        raise ValueError("A comparable run requires base and sft endpoints")
     output = Path(output)
     if output.exists():
         raise FileExistsError("Use a fresh output directory to preserve experiment history")
@@ -63,22 +64,25 @@ def run(dataset, endpoints, output):
         with httpx.Client(timeout=120, trust_env=False, headers={"Authorization": "Bearer " + key} if key else {}) as client:
             for row in rows:
                 start = time.perf_counter()
-                response = client.post(endpoint["url"].rstrip("/") + "/chat/completions", json={
-                    "model": endpoint["model"], "messages": [{"role": "user", "content": row["prompt"]}],
-                    "temperature": 0, "max_tokens": 256, "chat_template_kwargs": {"enable_thinking": False}})
-                response.raise_for_status()
-                data = response.json()
-                choice = data["choices"][0]
-                predictions.append({"id": row["id"], "answer": choice["message"]["content"],
-                                    "finish_reason": choice.get("finish_reason"), "usage": data.get("usage"),
-                                    "model": data.get("model"), "latency_ms": (time.perf_counter() - start) * 1000})
+                try:
+                    response = client.post(endpoint["url"].rstrip("/") + "/chat/completions", json={
+                        "model": endpoint["model"], "messages": [{"role": "user", "content": row["prompt"]}],
+                        "temperature": 0, "max_tokens": 256, "chat_template_kwargs": {"enable_thinking": False}})
+                    response.raise_for_status()
+                    data = response.json()
+                    choice = data["choices"][0]
+                    result = {"answer": choice["message"]["content"], "finish_reason": choice.get("finish_reason"),
+                              "usage": data.get("usage"), "model": data.get("model")}
+                except (httpx.HTTPError, ValueError, KeyError, IndexError, TypeError) as exc:
+                    result = {"answer": "", "finish_reason": "error", "usage": None, "model": endpoint["model"], "error": str(exc)}
+                predictions.append({"id": row["id"], **result, "latency_ms": (time.perf_counter() - start) * 1000})
                 write(output / f"{label}.jsonl", predictions)
-        scorer = score_references if "references" in rows[0] else score
+        scorer = score_unanswerable if rows[0].get("label") == "unanswerable" else score_references if "references" in rows[0] else score
         report["models"][label] = {**scorer(rows, predictions), **_generation_summary(predictions), "model": endpoint["model"],
                                     "predictions_sha256": hashlib.sha256((output / f"{label}.jsonl").read_bytes()).hexdigest()}
-    if "references" in rows[0]:
+    if "references" in rows[0] and rows[0].get("label") != "unanswerable":
         report["paired_token_f1_deltas"] = _paired_deltas(report)
-    report.update(status="measured", warning="Reference lexical overlap on public human product QA; not factual accuracy, preference or Chinese policy performance." if "references" in rows[0] else "Keyword rubric on synthetic policies; not human preference, hallucination rate or production accuracy.")
+    report.update(status="measured", warning="Automatic metrics are proxies; correctness, evidence support and helpfulness require separate blinded review." if "references" in rows[0] else "Keyword rubric on synthetic policies; not human preference, hallucination rate or production accuracy.")
     (output / "comparison.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     return report
 

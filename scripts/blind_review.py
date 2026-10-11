@@ -1,4 +1,4 @@
-"""Prepare and score human-blinded Base/SFT/DPO reviews without model judges."""
+"""Prepare and score human-blinded Base/SFT(/DPO) reviews without model judges."""
 import argparse
 import csv
 import hashlib
@@ -14,13 +14,17 @@ def _read_jsonl(path):
     return [json.loads(line) for line in Path(path).read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
-def prepare(dataset, predictions, review, key, seed=20261010):
+def prepare(dataset, predictions, review, key, seed=20261010, labels=LABELS):
     rows = _read_jsonl(dataset)
     ids = [row["id"] for row in rows]
     if not rows or len(set(ids)) != len(ids):
         raise ValueError("Dataset must have nonempty unique IDs")
     by_model = {}
-    for label in LABELS:
+    labels = tuple(labels)
+    if labels not in (("base", "sft"), LABELS):
+        raise ValueError("Blind review requires base/sft, optionally followed by dpo")
+    letters = "abc"[:len(labels)]
+    for label in labels:
         model_rows = _read_jsonl(Path(predictions) / f"{label}.jsonl")
         by_model[label] = {row["id"]: row for row in model_rows}
         if len(by_model[label]) != len(model_rows) or set(by_model[label]) != set(ids):
@@ -30,23 +34,26 @@ def prepare(dataset, predictions, review, key, seed=20261010):
         raise FileExistsError("Review and key outputs must be new files")
     review.parent.mkdir(parents=True, exist_ok=True)
     key.parent.mkdir(parents=True, exist_ok=True)
-    fields = ["item_id", "question", "evidence", "answer_a", "answer_b", "answer_c", "reviewer_id"]
-    fields += [f"{metric}_{letter}" for letter in "abc" for metric in SCORES]
+    fields = ["item_id", "question", "evidence"] + [f"answer_{letter}" for letter in letters] + ["reviewer_id"]
+    fields += [f"{metric}_{letter}" for letter in letters for metric in SCORES]
     fields += ["best", "notes"]
     key_rows = []
     with review.open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for row in rows:
-            order = sorted(LABELS, key=lambda label: hashlib.sha256(f"{seed}:{row['id']}:{label}".encode()).digest())
-            item = {"item_id": row["id"], "question": row.get("question") or row["prompt"], "evidence": json.dumps(row.get("evidence", []), ensure_ascii=False)}
+            order = sorted(labels, key=lambda label: hashlib.sha256(f"{seed}:{row['id']}:{label}".encode()).digest())
+            evidence = row.get("evidence")
+            if evidence is None:
+                evidence = json.loads(row["prompt"].split("\n", 1)[1])["reviews"]
+            item = {"item_id": row["id"], "question": row.get("question") or row["prompt"], "evidence": json.dumps(evidence, ensure_ascii=False)}
             mapping = {}
-            for letter, label in zip("abc", order):
+            for letter, label in zip(letters, order):
                 item[f"answer_{letter}"] = by_model[label][row["id"]]["answer"]
                 mapping[letter.upper()] = label
             writer.writerow(item)
             key_rows.append({"item_id": row["id"], "mapping": mapping})
-    payload = {"seed": seed, "labels": list(LABELS), "template_sha256": hashlib.sha256(review.read_bytes()).hexdigest(), "items": key_rows}
+    payload = {"seed": seed, "labels": list(labels), "template_sha256": hashlib.sha256(review.read_bytes()).hexdigest(), "items": key_rows}
     key.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     return payload
 
@@ -54,9 +61,11 @@ def prepare(dataset, predictions, review, key, seed=20261010):
 def score(reviews, key, output):
     key_data = json.loads(Path(key).read_text(encoding="utf-8"))
     mappings = {row["item_id"]: row["mapping"] for row in key_data["items"]}
+    labels = tuple(key_data["labels"])
+    letters = "abc"[:len(labels)]
     if not mappings:
         raise ValueError("Blind review key contains no items")
-    totals = {label: {metric: [] for metric in SCORES} | {"wins": 0} for label in LABELS}
+    totals = {label: {metric: [] for metric in SCORES} | {"wins": 0} for label in labels}
     reviewers, decisions = set(), []
     for review_path in reviews:
         with Path(review_path).open(encoding="utf-8-sig", newline="") as handle:
@@ -72,7 +81,7 @@ def score(reviews, key, output):
         reviewers.add(reviewer)
         for row in rows:
             reviewer = row["reviewer_id"].strip()
-            for letter in "abc":
+            for letter in letters:
                 label = mappings[row["item_id"]][letter.upper()]
                 for metric in SCORES:
                     value = row[f"{metric}_{letter}"].strip()
@@ -80,8 +89,8 @@ def score(reviews, key, output):
                         raise ValueError(f"{metric}_{letter} must be 0, 1, or 2")
                     totals[label][metric].append(int(value))
             best = row["best"].strip().upper()
-            if best not in {"A", "B", "C", "TIE"}:
-                raise ValueError("best must be A, B, C, or TIE")
+            if best not in {*(letter.upper() for letter in letters), "TIE"}:
+                raise ValueError("best must name an answer letter or TIE")
             winner = None if best == "TIE" else mappings[row["item_id"]][best]
             if winner:
                 totals[winner]["wins"] += 1
@@ -89,7 +98,7 @@ def score(reviews, key, output):
     report = {
         "status": "human_reviewed", "reviewers": sorted(reviewers),
         "review_files": [str(Path(path)) for path in reviews],
-        "ratings": {label: {**{metric: sum(totals[label][metric]) / len(totals[label][metric]) for metric in SCORES}, "best_win_rate": totals[label]["wins"] / len(decisions)} for label in LABELS},
+        "ratings": {label: {**{metric: sum(totals[label][metric]) / len(totals[label][metric]) for metric in SCORES}, "best_win_rate": totals[label]["wins"] / len(decisions)} for label in labels},
         "tie_rate": sum(decision["winner"] is None for decision in decisions) / len(decisions),
         "decision_count": len(decisions),
         "limitations": "Reviewer IDs and entries are self-reported. This script validates completeness and blinding keys but cannot prove reviewer identity or independence.",
@@ -111,12 +120,13 @@ def main():
     prep.add_argument("--review", required=True)
     prep.add_argument("--key", required=True)
     prep.add_argument("--seed", type=int, default=20261010)
+    prep.add_argument("--labels", default="base,sft,dpo")
     aggregate = sub.add_parser("score")
     aggregate.add_argument("--review", action="append", required=True)
     aggregate.add_argument("--key", required=True)
     aggregate.add_argument("--output", required=True)
     args = parser.parse_args()
-    result = prepare(args.dataset, args.predictions, args.review, args.key, args.seed) if args.command == "prepare" else score(args.review, args.key, args.output)
+    result = prepare(args.dataset, args.predictions, args.review, args.key, args.seed, args.labels.split(",")) if args.command == "prepare" else score(args.review, args.key, args.output)
     print(json.dumps(result, ensure_ascii=False))
 
 

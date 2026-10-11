@@ -1,0 +1,556 @@
+{
+  "source_documentation": "https://github.com/amazonqa/amazonqa",
+  "downloaded_at_utc": "2026-10-11T21:47:16.913157+00:00",
+  "sources": {
+    "train": {
+      "url": "https://amazon-qa.s3-us-west-2.amazonaws.com/train-qar.jsonl",
+      "bytes": 2666589462,
+      "etag": "\"32f4ae164c200c4108efedde1fd555ee-159\"",
+      "version_id": "8LR7vRkA1oF3X2SRKge83AfsZEBAZ_yi",
+      "last_modified": "Fri, 09 Aug 2019 17:12:25 GMT",
+      "sampled_ranges": [
+        {
+          "start": 16942448,
+          "end": 17991023,
+          "sha256": "6270f7465d247922a6989243c6ad7bbacd1818d00a3a89d05c31a97ed6c3cc4b"
+        },
+        {
+          "start": 74542139,
+          "end": 75590714,
+          "sha256": "6c4e2c29cb7207124524d9f23be517035201c229f1786192cbbb2877d92c4527"
+        },
+        {
+          "start": 83390200,
+          "end": 84438775,
+          "sha256": "c6ce9398d0c2462d5ddfaf4c1c78bb000671ee53d50a31b1d58d2bef6c9a29d9"
+        },
+        {
+          "start": 126793719,
+          "end": 127842294,
+          "sha256": "4669420f907cc9172d4c706489003d06d826ea691f4a4012465bfac630e22c5c"
+        },
+        {
+          "start": 200696465,
+          "end": 201745040,
+          "sha256": "ab9b0982cb827a399f6e9efa2a14f31b79adbb6482e0bc2c19bcd064be0f508e"
+        },
+        {
+          "start": 230455858,
+          "end": 231504433,
+          "sha256": "0e6676467d5403bb362ed009023ac126db4a691785cb4a5330b11704fab62197"
+        },
+        {
+          "start": 252851998,
+          "end": 253900573,
+          "sha256": "21d45abd925c984d020739612399bf987258370d7c2377a4cb978a58a34d2507"
+        },
+        {
+          "start": 300932108,
+          "end": 301980683,
+          "sha256": "4a14b6ae75c0dfa86a931ced7c99558d1f9bbcc47751e45b139199ca2dbf2776"
+        },
+        {
+          "start": 335416349,
+          "end": 336464924,
+          "sha256": "e02d7d83e8d74137ae1a10c364007884284839cb084d9bb151a6845dce20a1fc"
+        },
+        {
+          "start": 384569216,
+          "end": 385617791,
+          "sha256": "1ccd8aefb0cd344a6223a93c790cda605f89883c6ca673db534bb3b6ba662d0c"
+        },
+        {
+          "start": 453679918,
+          "end": 454728493,
+          "sha256": "3754df98ab0643092d1db7494f455e594c4b444b8ef8bcc10d741cd0acc92682"
+        },
+        {
+          "start": 481642939,
+          "end": 482691514,
+          "sha256": "3c47ee25935be72af5f9f4b2776c311c94a000b59f64295d2daf29883b7a76ad"
+        },
+        {
+          "start": 503097048,
+          "end": 504145623,
+          "sha256": "d0b6b47d5f31afe7213097727a541a403849bb674692580368031f99dc12fe96"
+        },
+        {
+          "start": 564426947,
+          "end": 565475522,
+          "sha256": "3b8e2cb83b2c68bd2d74e58a59207cd547cb0e526dae10008cdca17bb58c09e0"
+        },
+        {
+          "start": 610645002,
+          "end": 611693577,
+          "sha256": "3ad7244dbb724496e8e5db208d64e88a4d8566302cd52dee62ed09387a5495f9"
+        },
+        {
+          "start": 643208080,
+          "end": 644256655,
+          "sha256": "97e39e71da3240d2ba674908d3d151954349294406ef6f6f9ad54898e77faa7d"
+        },
+        {
+          "start": 697301122,
+          "end": 698349697,
+          "sha256": "34934b57dbacc3252d75a2be8d6a645fe8ed0fbb1c035e198ea12cebd62d6e51"
+        },
+        {
+          "start": 713636233,
+          "end": 714684808,
+          "sha256": "d7fbe8f527ca06949051ff11640295eea50479247a724cc908d309990d568bc9"
+        },
+        {
+          "start": 786531757,
+          "end": 787580332,
+          "sha256": "986153be2be1b0927f1364e48a37f89df40bd759d6c48981012a2ec8418f40d0"
+        },
+        {
+          "start": 827122113,
+          "end": 828170688,
+          "sha256": "eac65e9bb92ec63635793a374f1613feb94c923dd1d061782c93d4eaab305080"
+        },
+        {
+          "start": 858094838,
+          "end": 859143413,
+          "sha256": "bbc774786ac81839668f61ab6cc925c206952362311de97d96610e159a1e6b9b"
+        },
+        {
+          "start": 904493199,
+          "end": 905541774,
+          "sha256": "4a53e4e860b82a53d76287876af6c0203131107108321c4ec4b68a822067d0fa"
+        },
+        {
+          "start": 935428671,
+          "end": 936477246,
+          "sha256": "1ec60e9edfa62fbb9691b48a0f008004bdf06a89ff6a6a7e41d7641d4a5f8c00"
+        },
+        {
+          "start": 960912115,
+          "end": 961960690,
+          "sha256": "51760262e39509c997716ffb78bd7b6a16c68261bf8fffae9bb1dc19fcde77df"
+        },
+        {
+          "start": 1029239689,
+          "end": 1030288264,
+          "sha256": "90a8940181662cba0c403b58f1dfd4264a4b3ca0954b2e7749aae45c196fdac7"
+        },
+        {
+          "start": 1045589594,
+          "end": 1046638169,
+          "sha256": "129f6e0d658504279f2b8db5a0e89c0eeaf1e5c8361e8c4c2e812b3f3feaa238"
+        },
+        {
+          "start": 1099588966,
+          "end": 1100637541,
+          "sha256": "768695b8f4311a168fa867fec089987764324e23c15fee8da2523f55bbb37cf6"
+        },
+        {
+          "start": 1144040070,
+          "end": 1145088645,
+          "sha256": "295186a3575e84d8aa1bda1bb93dc6272b012f4958596b8efaa64f8fb9e53426"
+        },
+        {
+          "start": 1202795929,
+          "end": 1203844504,
+          "sha256": "c88ecf10064d5508d5d196879aad5c0293e375739c937fbf6af778d4d6479820"
+        },
+        {
+          "start": 1222329852,
+          "end": 1223378427,
+          "sha256": "aff0ad1740d6617117236881cd74e5b6d880fd5086905e847980959675f5e8a3"
+        },
+        {
+          "start": 1262148805,
+          "end": 1263197380,
+          "sha256": "501c37b92dbc8848c16cbfa5326e6a7a31a87f94a165a5a9ebd1bfd3ba02d9de"
+        },
+        {
+          "start": 1293041508,
+          "end": 1294090083,
+          "sha256": "873eaea92fb3edf786498f99f7338795730a62670565d9f2902256cbd148143a"
+        },
+        {
+          "start": 1345476976,
+          "end": 1346525551,
+          "sha256": "9747aacce0e8d14b82ea69fcd50485b177807fc0199949df9692fd50379619f7"
+        },
+        {
+          "start": 1380232211,
+          "end": 1381280786,
+          "sha256": "19c9a263b697142846a15f747aee7e932e235c4f4abe149e34a94699c80ca5d1"
+        },
+        {
+          "start": 1430009621,
+          "end": 1431058196,
+          "sha256": "7f9672b94c8ae32c8bd9b2cc7555f9abba5d93b95be6ab665d0e49928db838a5"
+        },
+        {
+          "start": 1480309869,
+          "end": 1481358444,
+          "sha256": "1fcc05a88d69284d699c02b78a1509a8a9ba436ad6169dfdb54fb2bfa69e2079"
+        },
+        {
+          "start": 1517064729,
+          "end": 1518113304,
+          "sha256": "a327a03bcda3340a457f4fb15598cf7f84eaa74b56012092e65767c78c94120c"
+        },
+        {
+          "start": 1571106972,
+          "end": 1572155547,
+          "sha256": "7d7d887264c4b2b2b653ed3acf1be0dba7d0aa3ad0a9097e9ab3141d80eeeb23"
+        },
+        {
+          "start": 1586386245,
+          "end": 1587434820,
+          "sha256": "7ebf12713b550d27f7955da328b6fe1325215da2af9c0044408cadee3e3e35a8"
+        },
+        {
+          "start": 1659591825,
+          "end": 1660640400,
+          "sha256": "bc6bf7208a1d5d93505a8c35ed39129c9e233c4328ae533d3121d0b1c27fd537"
+        },
+        {
+          "start": 1668300558,
+          "end": 1669349133,
+          "sha256": "ef0c010042a44fc4fbd29f60aaad1200335e05d37484be5bcf468fd4d2275df9"
+        },
+        {
+          "start": 1724976470,
+          "end": 1726025045,
+          "sha256": "2748956b7a27b7e87212e3443c5e0e61e2af79f90367267d26e708144265b523"
+        },
+        {
+          "start": 1789038724,
+          "end": 1790087299,
+          "sha256": "d4a8fa3c2eee1c135496b6c4de56e8dce496cd5739d5cb589c84d870c1d295c0"
+        },
+        {
+          "start": 1820576585,
+          "end": 1821625160,
+          "sha256": "2cd44e4ab72a8d9c52c22abada30412e7dc07e6671ec7c40ff2b569dff94a600"
+        },
+        {
+          "start": 1836542784,
+          "end": 1837591359,
+          "sha256": "88f0bebe5ae8b5ac0af747e1ee83c126a9e0b23d201906809b67c7d70be7403e"
+        },
+        {
+          "start": 1888139059,
+          "end": 1889187634,
+          "sha256": "dffe979c0006b08864ac26462e79e51614d7427e09592fac10428957303cc6c0"
+        },
+        {
+          "start": 1950966752,
+          "end": 1952015327,
+          "sha256": "84b9c211f4ebc3d057052329d9bd457c8ea8d091a1f1b278c2df1a92ab0201c5"
+        },
+        {
+          "start": 1960809033,
+          "end": 1961857608,
+          "sha256": "5800494c5190c42a035c2a02f04d59c0dba2c52f8a0ba1db1d0576f71465c5b4"
+        },
+        {
+          "start": 2015039125,
+          "end": 2016087700,
+          "sha256": "58f19f3d947804a291d52b717994fdc46e99a7a5939db6716eb117426f094991"
+        },
+        {
+          "start": 2063669453,
+          "end": 2064718028,
+          "sha256": "3c2c3bfaea5fd7baf3aaed4adb8d5ced78eef706bf4c921892aa87653f316e97"
+        },
+        {
+          "start": 2112603674,
+          "end": 2113652249,
+          "sha256": "78e085dd86d6d79fdd95004f4ade4ec81ef6affd81d605a9806753f57ea319aa"
+        },
+        {
+          "start": 2132648041,
+          "end": 2133696616,
+          "sha256": "2173414ccceab7808e0965b50f8df767f9013a508a5f542d0b0d59e3d252ab28"
+        },
+        {
+          "start": 2202788835,
+          "end": 2203837410,
+          "sha256": "e2118724f6c59d5ec06824684dea625caba4b63b9d0085b2f0bfe593669014db"
+        },
+        {
+          "start": 2225442515,
+          "end": 2226491090,
+          "sha256": "504254d390ecab2f3ae92ed1e904d99b48e5fba5cb4b7a3ba8a616ec11a802f1"
+        },
+        {
+          "start": 2280110125,
+          "end": 2281158700,
+          "sha256": "cd11364bec466705c7762d0ee362f4c2194417192ffda842fd6162f282a9abd2"
+        },
+        {
+          "start": 2311725143,
+          "end": 2312773718,
+          "sha256": "11a0750eaf0632e6d9ed3ab5e856db0db5e26b5aaa20d4ebba21021e2b3844e0"
+        },
+        {
+          "start": 2341220417,
+          "end": 2342268992,
+          "sha256": "6de21f34e7102588a8d62b9836e2ce2c2d0970824777c1e79d4032b9173da82f"
+        },
+        {
+          "start": 2378312332,
+          "end": 2379360907,
+          "sha256": "d67ab06651908b9f2998e4be44d3eaff42f88da65b7f5402c7bda5380c022850"
+        },
+        {
+          "start": 2420217216,
+          "end": 2421265791,
+          "sha256": "4e9de79a33cda242b30c7d5ce48a664789a48ab8259e6113ad99bcb5695ae3c8"
+        },
+        {
+          "start": 2479516285,
+          "end": 2480564860,
+          "sha256": "241f15550acaff02ada38693faf2f7ac127c3824f86d1fe3ee553bd9b11f9d65"
+        },
+        {
+          "start": 2501068122,
+          "end": 2502116697,
+          "sha256": "b00d0bb2bb655b513a1f43fd17c6b9ae35ace66decd9e06775c2054d3941f8c5"
+        },
+        {
+          "start": 2577329143,
+          "end": 2578377718,
+          "sha256": "81815a27eacafbb63e75e67e5cd3777172aa5a9258ede07d3b46eb37d94f8abb"
+        },
+        {
+          "start": 2624140914,
+          "end": 2625189489,
+          "sha256": "f0b97c8e95521de66e013be3f2ef88cc961006a95a28ab49a795c8314a4ca080"
+        },
+        {
+          "start": 2630809869,
+          "end": 2631858444,
+          "sha256": "5bb7e5fa1f2120329e3d2026c9cc24bebacd3ce5838545100360c0f045596382"
+        }
+      ],
+      "eligible_unique_qids": 18597
+    },
+    "validation": {
+      "url": "https://amazon-qa.s3-us-west-2.amazonaws.com/val-qar.jsonl",
+      "bytes": 747051157,
+      "etag": "\"77c9ad2bb7a40bdd61de0dfb0cb7258c-45\"",
+      "version_id": "SVDtPrOliVUp063ZMsSpggf5Tqzt46DF",
+      "last_modified": "Fri, 09 Aug 2019 17:13:51 GMT",
+      "sampled_ranges": [
+        {
+          "start": 18997891,
+          "end": 20046466,
+          "sha256": "b5926b4e4dc9a6701f5eb07ecb9859fe850ce16c5e485aa4915fb82137f9fcce"
+        },
+        {
+          "start": 37146106,
+          "end": 38194681,
+          "sha256": "43192d0f2bd52e5fc44b32469b1125de781f51a0ef51e4f20f92059b5c7ee5ce"
+        },
+        {
+          "start": 89617758,
+          "end": 90666333,
+          "sha256": "2b6df09ad03dbe4f293710fa6887cf71895c328f156645f0256e92dc5af4872f"
+        },
+        {
+          "start": 121742464,
+          "end": 122791039,
+          "sha256": "9a1623c10f37208ec33818032e53f3fffedbf2cf2b74b4aaee1f24168c5757c9"
+        },
+        {
+          "start": 134715876,
+          "end": 135764451,
+          "sha256": "063a4c03bc209d1c413f6d56bc37e7fa42a56f8d38376b1fc0cd6042c5ee2bb1"
+        },
+        {
+          "start": 170378406,
+          "end": 171426981,
+          "sha256": "3539b9016a75f5ef7e0a199afaef103e6c04142f54c10b434ed7fd9511d2914a"
+        },
+        {
+          "start": 199679787,
+          "end": 200728362,
+          "sha256": "27a9fbef0876e06e2e2d58c552d36cb147b870d9fd98f6458a93d09a4187d675"
+        },
+        {
+          "start": 237135176,
+          "end": 238183751,
+          "sha256": "64e0d48ae21af49fd16628d4b2db9ab18bb66f69eed2ea3b5715a4cffc6f8148"
+        },
+        {
+          "start": 267516791,
+          "end": 268565366,
+          "sha256": "b8358bd41ef832d6cd0937801a0a8b9e27db66638e888c40595ab923e4822890"
+        },
+        {
+          "start": 305905019,
+          "end": 306953594,
+          "sha256": "42923b5ae98de33dd4ee81664160001d4b847fa079250cebf01a3beb467962c5"
+        },
+        {
+          "start": 338728617,
+          "end": 339777192,
+          "sha256": "371ba1db2835b68ab83be453738fcbb8ffac13d50fc36c13e3b6bc7b86d0759c"
+        },
+        {
+          "start": 368579050,
+          "end": 369627625,
+          "sha256": "eb5a47744251484c6b0904ea1de8b03decbc4411f8681bc940a74fb611bb8bc7"
+        },
+        {
+          "start": 375818318,
+          "end": 376866893,
+          "sha256": "e5b1888cc8166ef9e305f2fd6f64d628d8213436207d0e61e6517f205f7cb8a2"
+        },
+        {
+          "start": 411539119,
+          "end": 412587694,
+          "sha256": "a7ca58ed20c13ff56e640f698c1b92e1b9eaf1f08510c7b8196b11e0a642744f"
+        },
+        {
+          "start": 458400222,
+          "end": 459448797,
+          "sha256": "9aa925eaf7fb31be84a9683f8a7f1910f77d40be4385695b102aa0a6b02ad3a9"
+        },
+        {
+          "start": 492549085,
+          "end": 493597660,
+          "sha256": "c425eb239333408fb4c9fcc26194510921060c5a7a711b96255e47ac85f08a6d"
+        },
+        {
+          "start": 501286461,
+          "end": 502335036,
+          "sha256": "a9ef95034c2ca2a69ea077a3796bd0adbde00eee1860682b462396642119fe42"
+        },
+        {
+          "start": 536940722,
+          "end": 537989297,
+          "sha256": "1833d242ddae194228cd869910c907ef22f50be373b5fab7e8597689efc8484f"
+        },
+        {
+          "start": 564301428,
+          "end": 565350003,
+          "sha256": "5b997fc728c08f437b320156d5d69504196042f1ae57537cfab933277161d65e"
+        },
+        {
+          "start": 605479589,
+          "end": 606528164,
+          "sha256": "eb48cc5bed47eecf5d43a100d37cec78190b5fcd6355e61690faccdffdef2c53"
+        },
+        {
+          "start": 645192846,
+          "end": 646241421,
+          "sha256": "99e3938f4c99015df1f39c8594d5e924d99362176008c296d1b70bea85721f73"
+        },
+        {
+          "start": 655123121,
+          "end": 656171696,
+          "sha256": "e0121a5abcabaafc524d2282a7841bcec5a482976bdd76919a0d256dc4d69ec0"
+        },
+        {
+          "start": 705736997,
+          "end": 706785572,
+          "sha256": "d240fbab964b94562e10a24b9933bdfd99ed09db12199482aeaae6fe8a430c2e"
+        },
+        {
+          "start": 722905167,
+          "end": 723953742,
+          "sha256": "afa9fb35cd1e7c45aed7215568cadc820e174188d1db5ef3565191ed9235cc13"
+        }
+      ],
+      "eligible_unique_qids": 3108
+    }
+  },
+  "seed": 20261012,
+  "range_bytes": 1048576,
+  "ranges_per_source": {
+    "train": 64,
+    "validation": 24
+  },
+  "selection": "seeded 1 MiB ranges distributed per official source; discard boundary records; unique qid; product hash modulo 10 for SFT validation; lowest seeded qid hash for external holdout",
+  "rules": {
+    "sft": "answerable classifier label, nonempty reviews, max prompt 4000 chars; human answer >=1 positive vote and >=50% helpful; 2-60 content tokens, >=50% content-token evidence overlap and no unsupported numerals; select highest Wilson 95% lower bound; deterministic tie break",
+    "dpo": "same-question answers each >=2 votes and evidence overlap filter; chosen >=2 positive votes and Wilson lower bound gap >=0.15; at most one pair per training qid",
+    "holdout": "200 answerable and 100 unanswerable from official validation; no ASIN/qid/normalized question/raw record overlap"
+  },
+  "counts": {
+    "sampled_train": 18597,
+    "sampled_official_validation": 3108,
+    "sft_train": 1700,
+    "sft_validation": 189,
+    "dpo_candidate_pairs": 42,
+    "eval_answerable": 200,
+    "eval_unanswerable": 100
+  },
+  "category_counts": {
+    "answerable": {
+      "Health_and_Personal_Care": 16,
+      "Home_and_Kitchen": 27,
+      "Electronics": 43,
+      "Pet_Supplies": 5,
+      "Cell_Phones_and_Accessories": 8,
+      "Tools_and_Home_Improvement": 17,
+      "Grocery_and_Gourmet_Food": 5,
+      "Musical_Instruments": 8,
+      "Sports_and_Outdoors": 22,
+      "Automotive": 8,
+      "Baby": 5,
+      "Toys_and_Games": 11,
+      "Patio_Lawn_and_Garden": 5,
+      "Beauty": 11,
+      "Office_Products": 8,
+      "Video_Games": 1
+    },
+    "unanswerable": {
+      "Clothing_Shoes_and_Jewelry": 3,
+      "Tools_and_Home_Improvement": 8,
+      "Sports_and_Outdoors": 5,
+      "Health_and_Personal_Care": 4,
+      "Automotive": 13,
+      "Electronics": 29,
+      "Cell_Phones_and_Accessories": 8,
+      "Patio_Lawn_and_Garden": 7,
+      "Office_Products": 2,
+      "Musical_Instruments": 2,
+      "Beauty": 6,
+      "Pet_Supplies": 1,
+      "Video_Games": 1,
+      "Home_and_Kitchen": 7,
+      "Baby": 1,
+      "Grocery_and_Gourmet_Food": 1,
+      "Toys_and_Games": 2
+    }
+  },
+  "is_answerable_counts": {
+    "train": {
+      "answerable": 10244,
+      "unanswerable": 6214
+    },
+    "validation": {
+      "unanswerable": 711,
+      "answerable": 1143
+    },
+    "answerable": {
+      "answerable": 200
+    },
+    "unanswerable": {
+      "unanswerable": 100
+    }
+  },
+  "overlap": {
+    "asin": 0,
+    "id": 0,
+    "normalized_question_sha256": 0,
+    "source_record_sha256": 0
+  },
+  "file_sha256": {
+    "train.jsonl": "65e199ee95fa66367f3f8907accf549089735e7f355338bacdfdd3a1784a01b7",
+    "validation.jsonl": "5ac8b73fce8fb0c3de51ce02e8abc1666c7dd64126f20efdc8a4b129dd22043d",
+    "preferences.jsonl": "b2ddb213312d8e47bd014e99390bad17f4ca62cdabffe6816ed46a737c53f2a0",
+    "eval-answerable.jsonl": "f5a4998005f9ccb6c24e50a8709099dd0d4689311964fe2727a4d45d934f23c7",
+    "eval-unanswerable.jsonl": "205a005ab5b4589bf63d7fde593da81c475127777a7ebe5fd44fc2023023457c"
+  },
+  "limitations": "Byte-range sample is not record-uniform. is_answerable is a classifier output, not human gold. Helpful votes can be sparse and do not prove evidence support. Community answers are not expert gold. Public data may occur in pretraining. No redistribution license asserted; derived rows remain gitignored."
+}

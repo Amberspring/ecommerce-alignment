@@ -2,6 +2,20 @@
 
 Qwen3-8B 的 QLoRA SFT、DPO、同条件模型对照与证据审计项目。实现数据清洗和隔离切分、训练参数更新检查、逐例预测留痕、外部数据抽样、配对不确定性分析及真人盲评流程。
 
+## 2026-10-12：真实英文训练数据准备
+
+旧适配器在冻结 AmazonQA 200 题上的 Base/SFT/DPO token F1 分别为 0.20225、0.20851、0.20848；SFT−Base 的配对 95% 区间为 [-0.00322, 0.01568]，DPO−Base 为 [-0.00376, 0.01629]，均不足以证明质量改善。原始 GPU 输出在单独的本机证据包中，旧训练、旧评测和旧适配器备份保持不变。
+
+新流水线改用官方 AmazonQA train 中的英文评论证据问答，依据人类 helpful 投票选目标、过滤明显缺乏评论支持的答案，并按 ASIN 隔离训练、内部验证与官方 validation 留出。新构建 r2 得到 SFT 训练 1700 条、内部验证 189 条、独立 answerable 200 条、unanswerable 100 条，四类泄漏交叉均为零；符合固定投票与证据规则的 DPO 候选仅 42 对，未达到预设的 200 对训练门槛。规则、来源范围哈希、完整复现命令及统计见 [冻结协议](docs/AMAZONQA_ALIGNMENT_PROTOCOL_20261012.md)和 [manifest](results/amazonqa-alignment-20261012-r2/source-manifest.json)。这些只是 CPU 数据准备结果，新 SFT 尚无模型质量成绩；证据过滤是词面代理，不等于人工核实的事实支持。
+
+```sh
+python scripts/prepare_amazonqa_alignment.py --output artifacts/amazonqa-alignment-20261012-r2
+python -m pytest -q tests/test_amazonqa_alignment.py
+python -m ecom.train --config configs/qlora-r16-qv.json --stage sft --data-dir artifacts/amazonqa-alignment-20261012-r2 --output artifacts/amazonqa-sft-20261012-r2
+```
+
+原 `python -m ecom.data` 只适用于合成政策教学数据，不能作为新训练入口；`ecom.train` 现要求显式指定新数据目录和唯一输出目录。
+
 [![CPU checks](https://github.com/Amberspring/ecommerce-alignment/actions/workflows/cpu-checks.yml/badge.svg)](https://github.com/Amberspring/ecommerce-alignment/actions/workflows/cpu-checks.yml)
 
 | 当前证据 | 结论 |
@@ -9,9 +23,9 @@ Qwen3-8B 的 QLoRA SFT、DPO、同条件模型对照与证据审计项目。实�
 | 2026-10-06，RTX 4080 SUPER 32GB，SFT/DPO 各 40 step | 训练链路、policy 更新和 reference 冻结得到验证；不代表业务泛化。 |
 | 48 条合成政策题：Base 31/48，SFT 48/48，DPO 48/48 | 模板数据已饱和，且 Base 有 6 条截断；不能据此宣布 DPO 优于 SFT。 |
 | 历史 AmazonQA 20 题：F1 约 0.215/0.221/0.219，EM 均为 0 | 没有观察到可靠的 SFT/DPO 外部增益；样本太小。 |
-| 新冻结 AmazonQA 200 题 | 数据与 manifest 已在 CPU 上生成，模型预测和真人盲评尚未运行。 |
+| 旧冻结 AmazonQA 200 题 | 2026-10-12 Base/SFT/DPO 已实测，F1 约 0.202/0.209/0.208，增量区间跨零；真人盲评尚未运行。 |
 
-当前本机和仓库不含 8B 适配器权重，远端原文件是否仍在尚未核实，不能仅凭日志复现相同模型。项目当前可证明后训练实验设计和负结果分析，尚不能声称真实客服质量提升；详见[独立评测与真人盲评](docs/HUMAN_EVAL.md)和[下一次模型验收预算](docs/NEXT_RUN_BUDGET.md)。
+仓库不含 8B 适配器权重；本机另有已校验的旧适配器备份，但新 SFT 尚未训练。项目当前可证明后训练实验设计和负结果分析，尚不能声称真实客服质量提升；详见[独立评测与真人盲评](docs/HUMAN_EVAL.md)和[下一次模型验收预算](docs/NEXT_RUN_BUDGET.md)。
 
 **当前交付：CPU 工程验证 + Qwen3-8B GPU 主链路实测。** QLoRA SFT 与 DPO 各训练 2 epoch/40 step；SFT 和 DPO 分别记录 9.84GB、11.69GB 的 PyTorch peak allocated memory，均有 144 个可训练张量发生变化，DPO reference 保持不变。
 CPU 实验确实调用 TRL、PEFT 和 Qwen3 架构，但模型很小、随机初始化；不能把其 loss、token accuracy 或 reward accuracy 写成 8B 客服准确率。
@@ -63,12 +77,9 @@ flowchart LR
 
 ```sh
 python -m pip install -e ".[gpu,eval]" pytest
-python -m ecom.data
-python scripts/ablation.py
-# 加 --execute 才真正执行全部 SFT 配置。
-python -m ecom.train --config configs/lora-r16-qv.json --stage sft
-python -m ecom.train --config configs/lora-r16-qv.json --stage dpo
-python scripts/merge_adapter.py --adapter artifacts/lora-r16-qv/dpo/policy --output artifacts/merged-model
+python scripts/prepare_amazonqa_alignment.py --output artifacts/amazonqa-alignment-20261012-r2
+python -m ecom.train --config configs/qlora-r16-qv.json --stage sft --data-dir artifacts/amazonqa-alignment-20261012-r2 --output artifacts/amazonqa-sft-20261012-r2
+# DPO 仅在冻结的质量与偏好样本门槛通过后另设唯一目录运行。
 ```
 
 完整 8B 模型是否能训练取决于显存、长度、优化器及精度，不能仅凭“8B”保证某张卡够用。QLoRA 依赖 bitsandbytes；它不等于部署用的 AWQ/GPTQ。

@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 import httpx
 import pytest
-from ecom.evaluate import score
+from ecom.evaluate import score, score_unanswerable
 
 
 def test_rubric_empty_duplicate_numeric_and_truncated():
@@ -46,5 +46,12 @@ def test_reference_comparison_reports_paired_uncertainty(monkeypatch, tmp_path):
     monkeypatch.setattr(module.httpx, "Client", lambda **kwargs: real_client(transport=httpx.MockTransport(handle), **kwargs))
     dataset = tmp_path / "external.jsonl"
     dataset.write_text(json.dumps({"id": "a", "prompt": "q", "references": ["right answer"]}), encoding="utf-8")
-    result = module.run(dataset, {label: {"url": "http://fixture/v1", "model": label} for label in ("base", "sft", "dpo")}, tmp_path / "external-results")
+    result = module.run(dataset, {label: {"url": "http://fixture/v1", "model": label} for label in ("base", "sft")}, tmp_path / "external-results")
     assert result["paired_token_f1_deltas"]["sft_minus_base"]["mean_token_f1_delta"] > 0
+
+
+def test_unanswerable_protocol_does_not_score_community_reference_as_gold():
+    rows = [{"id": "a", "label": "unanswerable", "references": []}]
+    result = score_unanswerable(rows, [{"id": "a", "answer": "The reviews do not say.", "finish_reason": "stop"}])
+    assert result["explicit_insufficiency_proxy_rate"] == 1
+    assert "mean_reference_token_f1" not in result

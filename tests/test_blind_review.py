@@ -44,3 +44,21 @@ def test_blind_review_requires_real_completed_labels(tmp_path):
     assert report["status"] == "human_reviewed" and report["tie_rate"] == 1
     with pytest.raises(ValueError, match="only once"):
         module.score([review, review], key, tmp_path / "duplicate.json")
+
+
+def test_two_model_review_includes_visible_comment_evidence(tmp_path):
+    module = _module()
+    dataset = tmp_path / "eval.jsonl"
+    prompt = 'Answer using reviews.\n{"question":"q","reviews":["visible review"]}'
+    dataset.write_text(json.dumps({"id": "1", "question": "q", "prompt": prompt}) + "\n", encoding="utf-8")
+    predictions = tmp_path / "predictions"
+    predictions.mkdir()
+    for label in ("base", "sft"):
+        (predictions / f"{label}.jsonl").write_text(json.dumps({"id": "1", "answer": label}) + "\n", encoding="utf-8")
+    review, key = tmp_path / "review.csv", tmp_path / "key.json"
+    module.prepare(dataset, predictions, review, key, labels=("base", "sft"))
+    with review.open(encoding="utf-8-sig", newline="") as handle:
+        row = next(csv.DictReader(handle))
+    assert "visible review" in row["evidence"]
+    assert "answer_c" not in row
+    assert json.loads(key.read_text(encoding="utf-8"))["labels"] == ["base", "sft"]
