@@ -19,7 +19,9 @@ python scripts/compare_models.py --dataset artifacts/amazonqa-audit-20261010/eva
 python scripts/blind_review.py prepare --dataset artifacts/amazonqa-audit-20261010/eval.jsonl --predictions results/amazonqa-<run-id> --review artifacts/review/reviewer-1.csv --key artifacts/review/key.json
 ```
 
-评审人只能拿到 CSV，不应看到 key、模型名或自动指标。对每个 A/B/C 回答分别填写 correctness、support、helpfulness，取值 0=不合格、1=部分合格、2=合格；`best` 填 A、B、C 或 TIE，`reviewer_id` 必须是真实参与者的稳定匿名编号。correctness 判断答案是否回应问题，support 判断回答是否完全受给定评论支撑，helpfulness 判断是否简洁、有用且没有无依据承诺。
+评审人只能拿到 CSV，不应看到 key、模型名或自动指标。对 answerable 集的每个 A/B/C 回答分别填写 correctness、support、helpfulness，取值 0=不合格、1=部分合格、2=合格；`best` 填 A、B、C 或 TIE，`reviewer_id` 必须是真实参与者的稳定匿名编号。correctness 判断答案是否回应问题，support 的 2 分表示回答完全受给定评论支撑，helpfulness 判断是否简洁、有用且没有无依据承诺。
+
+对 unanswerable 集另行生成评分表。先填 `evidence_sufficient`：仅当可见评论足以回答问题全部关键部分时填 1，否则填 0；这个复核项用于暴露 AmazonQA 分类器可能误标的题。逐个答案填写 `insufficiency_recognition`（明确指出缺少证据）、`unsupported_assertion`（出现评论不支持的具体商品断言）和 `correct_refusal`（证据不足时明确拒绝猜测，且没有无依据断言），三项填 0 或 1；`helpfulness` 仍填 0 至 2。证据其实充分的题不能给 `correct_refusal` 或 `insufficiency_recognition` 加分。两个子集的分数、分母和坏例分别报告，不能混成一个质量数字。
 
 完成后汇总；两个评审人应分别复制原始空表填写，不能互相覆盖：
 
@@ -27,4 +29,4 @@ python scripts/blind_review.py prepare --dataset artifacts/amazonqa-audit-202610
 python scripts/blind_review.py score --review artifacts/review/reviewer-1.csv --review artifacts/review/reviewer-2.csv --key artifacts/review/key.json --output results/amazonqa-<run-id>/human-review.json
 ```
 
-脚本拒绝空 reviewer、缺题、重复题、越界分数和未填写的 best，并公开 reviewer ID、评分文件路径及“身份由参与者自报”的限制。若没有真人完成 CSV，就只能报告“盲评工具已准备”，不能写成人评成绩。
+脚本拒绝空 reviewer、缺题、重复题、越界分数、篡改后的问题/证据/答案和未填写的 best。报告保存评分文件 SHA-256、逐题分数和按题聚类的 5000 次配对 bootstrap 区间；answerable 的 `support_rate_2` 是评论完全支持的比例，用于预先冻结的验收门槛。报告状态只写 `reviewer_entries_recorded`，因为 reviewer ID 由填写者自报，程序无法证明真人参与；应另存真人评审的参与记录。若没有真人完成 CSV，就只能报告“盲评工具已准备”，不能写成人评成绩。
