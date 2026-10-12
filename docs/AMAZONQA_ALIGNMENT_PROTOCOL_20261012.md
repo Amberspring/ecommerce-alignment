@@ -19,9 +19,12 @@ SFT 仅使用官方 train 中被标为 answerable、有评论证据且提示不�
 ```sh
 python scripts/prepare_amazonqa_alignment.py --output artifacts/amazonqa-alignment-20261012-r2
 python -m pytest -q tests/test_amazonqa_alignment.py
+python scripts/check_token_lengths.py --data-dir artifacts/amazonqa-alignment-20261012-r2 --output results/amazonqa-alignment-20261012-r2/token-lengths-20261012-v2.json
 python -m ecom.train --config configs/qlora-r16-qv.json --stage sft --data-dir artifacts/amazonqa-alignment-20261012-r2 --output artifacts/amazonqa-sft-20261012-r2
 ```
 
 构建后将 `manifest.json` 中不含问答文本的统计和哈希复制到新的 `results/amazonqa-alignment-20261012-r2/`，记录原始命令与完整日志。旧 `python -m ecom.data` 只构建历史合成数据，不能作为新训练入口；旧适配器、旧 200 题和其原始比较一律保留。
+
+CPU 预检使用 Qwen3-8B 的真实分词器和非 thinking 对话模板，`train` 1700 条最长 705 token、内部验证 189 条最长 682 token、两个留出集最长分别为 613 与 572 token，均未达到 1024 token 截断上限。该结果只验证输入长度，不代表答案质量；分词器与模板哈希保存在预检输出中。
 
 模型服务就绪后分别对 `eval-answerable.jsonl` 和 `eval-unanswerable.jsonl` 执行 `scripts/compare_models.py`，`--endpoints` 固定为 Base/SFT 两个服务，`--output` 使用各自新目录。该脚本对 answerable 计算 F1/EM/配对区间，对 unanswerable 只计算明确表示证据不足的字符串代理；接口失败和截断留在分母。人工盲评表用 `python scripts/blind_review.py prepare --dataset ... --predictions ... --review ... --key ... --labels base,sft` 生成，评审看到问题和评论但看不到模型名；真实评审完成后再运行 `score`，不得预填或自称人工参与。
